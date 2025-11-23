@@ -18,7 +18,7 @@ import {
 
 import { useUser } from "@/hooks/use-user"
 import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
+import { NavBottom } from "@/components/nav-bottom"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
     Sidebar,
@@ -44,6 +44,7 @@ const data = {
     ],
     navMain: [
         {
+            group: "Platform",
             title: "Dashboard",
             url: "/",
             icon: LayoutDashboard,
@@ -56,6 +57,7 @@ const data = {
             ],
         },
         {
+            group: "Finance",
             title: "Finance",
             url: "#",
             icon: CreditCard,
@@ -86,21 +88,6 @@ const data = {
                 },
             ],
         },
-        {
-            title: "Settings",
-            url: "#",
-            icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Categories",
-                    url: "#",
-                },
-            ],
-        },
     ],
 }
 
@@ -122,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavMain items={data.navMain} />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={userData} />
+                {user && <NavBottom user={userData} />}
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>

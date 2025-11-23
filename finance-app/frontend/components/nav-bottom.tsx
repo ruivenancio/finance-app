@@ -4,9 +4,12 @@ import {
     BadgeCheck,
     Bell,
     ChevronsUpDown,
+    ChevronRight,
     CreditCard,
     LogOut,
     Sparkles,
+    User,
+    Settings2,
 } from "lucide-react"
 
 import {
@@ -24,14 +27,21 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
+    SidebarGroup,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
+    SidebarMenuSubButton,
+
 } from "@/components/ui/sidebar"
 import { useRouter } from "next/navigation"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
+import Link from "next/link"
 
-export function NavUser({
+export function NavBottom({
     user,
 }: {
     user: {
@@ -49,8 +59,9 @@ export function NavUser({
     }
 
     return (
+
         <SidebarMenu>
-            <SidebarMenuItem>
+            {user && <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <SidebarMenuButton
@@ -107,6 +118,10 @@ export function NavUser({
                                 <Bell />
                                 Notifications
                             </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Settings2 />
+                                Settings
+                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
@@ -115,7 +130,7 @@ export function NavUser({
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            </SidebarMenuItem>
+            </SidebarMenuItem>}
         </SidebarMenu>
     )
 }
