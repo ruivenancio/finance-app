@@ -16,6 +16,9 @@ import { ModeToggle } from "@/components/mode-toggle";
 interface DashboardData {
     totalBalance: number;
     accountCount: number;
+    monthlyExpenses: number;
+    monthlyIncome: number;
+    totalBudget: number;
     recentTransactions: any[];
 }
 
@@ -90,8 +93,10 @@ export default function Home() {
                                 <Wallet className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">$1,234.56</div>
-                                <p className="text-xs text-muted-foreground">+12% from last month</p>
+                                <div className="text-2xl font-bold">${data?.monthlyExpenses.toFixed(2)}</div>
+                                <p className="text-xs text-muted-foreground">
+                                    Income: ${data?.monthlyIncome.toFixed(2)}
+                                </p>
                             </CardContent>
                         </Card>
                         <Card>
@@ -100,8 +105,12 @@ export default function Home() {
                                 <PieChart className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">On Track</div>
-                                <p className="text-xs text-muted-foreground">85% used</p>
+                                <div className="text-2xl font-bold">
+                                    {data?.totalBudget ? `${((data.monthlyExpenses / data.totalBudget) * 100).toFixed(0)}%` : "No Budget"}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    {data?.totalBudget ? `${data.monthlyExpenses.toFixed(0)} / ${data.totalBudget.toFixed(0)} used` : "Set a budget to track"}
+                                </p>
                             </CardContent>
                         </Card>
                     </div>

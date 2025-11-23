@@ -61,6 +61,18 @@ const data = {
             icon: CreditCard,
             items: [
                 {
+                    title: "New Category",
+                    url: "/categories/new",
+                },
+                {
+                    title: "New Transaction",
+                    url: "/transactions/new",
+                },
+                {
+                    title: "New Account",
+                    url: "/accounts/new",
+                },
+                {
                     title: "Transactions",
                     url: "/transactions",
                 },

@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect, createContext, useContext, ReactNode } from "react";
 import api from "@/lib/api";
 
 interface User {
@@ -7,25 +9,45 @@ interface User {
     createdAt: string;
 }
 
-export function useUser() {
+interface UserContextType {
+    user: User | null;
+    loading: boolean;
+    refreshUser: () => Promise<void>;
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export function UserProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await api.get("/auth/me");
-                setUser(response.data);
-            } catch (error) {
-                console.error("Failed to fetch user", error);
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchUser = async () => {
+        try {
+            const response = await api.get("/auth/me");
+            setUser(response.data);
+        } catch (error) {
+            console.error("Failed to fetch user", error);
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchUser();
     }, []);
 
-    return { user, loading };
+    return (
+        <UserContext.Provider value={{ user, loading, refreshUser: fetchUser }}>
+            {children}
+        </UserContext.Provider>
+    );
+}
+
+export function useUser() {
+    const context = useContext(UserContext);
+    if (context === undefined) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
+    return context;
 }

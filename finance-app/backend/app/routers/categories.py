@@ -16,6 +16,7 @@ async def create_category(category: CategoryCreate, user=Depends(get_current_use
         data={
             "name": category.name,
             "type": category.type,
+            "parentId": category.parentId,
             "userId": user.id
         }
     )

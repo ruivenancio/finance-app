@@ -40,6 +40,9 @@ model Category {
   type         String        // INCOME, EXPENSE
   userId       String
   user         User          @relation(fields: [userId], references: [id])
+  parentId     String?
+  parent       Category?     @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children     Category[]    @relation("CategoryToCategory")
   transactions Transaction[]
   budgets      Budget[]
   createdAt    DateTime      @default(now())

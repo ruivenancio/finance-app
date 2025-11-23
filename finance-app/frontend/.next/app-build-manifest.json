@@ -11,10 +11,20 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/transactions/page": [
+    "/login/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/transactions/page.js"
+      "static/chunks/app/login/page.js"
+    ],
+    "/accounts/new/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/accounts/new/page.js"
+    ],
+    "/transactions/new/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/transactions/new/page.js"
     ],
     "/accounts/page": [
       "static/chunks/webpack.js",
@@ -26,15 +36,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/budget/page.js"
     ],
-    "/login/page": [
+    "/transactions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/transactions/page.js"
     ],
-    "/not-found": [
+    "/categories/new/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
+      "static/chunks/app/categories/new/page.js"
     ]
   }
 }

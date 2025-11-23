@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { UserProvider } from "@/hooks/use-user";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -34,14 +35,16 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <SidebarProvider>
-                        <AppSidebar />
-                        <SidebarInset>
-                            <main className="w-full">
-                                {children}
-                            </main>
-                        </SidebarInset>
-                    </SidebarProvider>
+                    <UserProvider>
+                        <SidebarProvider>
+                            <AppSidebar />
+                            <SidebarInset>
+                                <main className="w-full">
+                                    {children}
+                                </main>
+                            </SidebarInset>
+                        </SidebarProvider>
+                    </UserProvider>
                 </ThemeProvider>
             </body>
         </html>

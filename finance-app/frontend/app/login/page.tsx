@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUser } from "@/hooks/use-user";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
+    const { refreshUser } = useUser();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,6 +24,7 @@ export default function LoginPage() {
 
             const response = await api.post("/auth/login", formData);
             localStorage.setItem("token", response.data.access_token);
+            await refreshUser();
             router.push("/");
         } catch (err) {
             setError("Invalid credentials");
@@ -38,7 +41,7 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-gray-100">
+        <main className="flex min-h-screen items-center justify-center bg-background">
             <Card className="w-[350px]">
                 <CardHeader>
                     <CardTitle>Login / Register</CardTitle>

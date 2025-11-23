@@ -33,6 +33,7 @@ class Token(BaseModel):
 class CategoryCreate(BaseModel):
     name: str
     type: str # INCOME, EXPENSE
+    parentId: Optional[str] = None
 
 class CategoryResponse(CategoryCreate):
     id: str
