@@ -1,0 +1,118 @@
+"use client"
+
+import * as React from "react"
+import {
+    AudioWaveform,
+    BookOpen,
+    Bot,
+    Command,
+    Frame,
+    GalleryVerticalEnd,
+    Map,
+    PieChart,
+    Settings2,
+    Wallet,
+    CreditCard,
+    LayoutDashboard,
+} from "lucide-react"
+
+import { useUser } from "@/hooks/use-user"
+import { NavMain } from "@/components/nav-main"
+import { NavUser } from "@/components/nav-user"
+import { TeamSwitcher } from "@/components/team-switcher"
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarRail,
+} from "@/components/ui/sidebar"
+
+// This is sample data.
+const data = {
+    user: {
+        name: "User",
+        email: "user@example.com",
+        avatar: "/placeholder-user.jpg",
+    },
+    teams: [
+        {
+            name: "Personal Finance",
+            logo: Wallet,
+            plan: "Pro",
+        },
+    ],
+    navMain: [
+        {
+            title: "Dashboard",
+            url: "/",
+            icon: LayoutDashboard,
+            isActive: true,
+            items: [
+                {
+                    title: "Overview",
+                    url: "/",
+                },
+            ],
+        },
+        {
+            title: "Finance",
+            url: "#",
+            icon: CreditCard,
+            items: [
+                {
+                    title: "Transactions",
+                    url: "/transactions",
+                },
+                {
+                    title: "Accounts",
+                    url: "/accounts",
+                },
+                {
+                    title: "Budget",
+                    url: "/budget",
+                },
+            ],
+        },
+        {
+            title: "Settings",
+            url: "#",
+            icon: Settings2,
+            items: [
+                {
+                    title: "General",
+                    url: "#",
+                },
+                {
+                    title: "Categories",
+                    url: "#",
+                },
+            ],
+        },
+    ],
+}
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { user } = useUser();
+
+    const userData = {
+        name: user?.email.split("@")[0] || "User",
+        email: user?.email || "user@example.com",
+        avatar: "/placeholder-user.jpg",
+    }
+
+    return (
+        <Sidebar collapsible="icon" {...props}>
+            <SidebarHeader>
+                <TeamSwitcher teams={data.teams} />
+            </SidebarHeader>
+            <SidebarContent>
+                <NavMain items={data.navMain} />
+            </SidebarContent>
+            <SidebarFooter>
+                <NavUser user={userData} />
+            </SidebarFooter>
+            <SidebarRail />
+        </Sidebar>
+    )
+}
