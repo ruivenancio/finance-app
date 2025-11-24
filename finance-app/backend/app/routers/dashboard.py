@@ -42,11 +42,36 @@ async def get_dashboard_summary(user=Depends(get_current_user)):
         include={"category": True}
     )
     
+    # Monthly Stats for Chart
+    start_of_year = datetime(now.year, 1, 1)
+    yearly_transactions = await prisma.transaction.find_many(
+        where={
+            "userId": user.id,
+            "date": {
+                "gte": start_of_year
+            }
+        },
+        include={"category": True}
+    )
+
+    monthly_stats = []
+    for i in range(1, 13):
+        month_name = datetime(now.year, i, 1).strftime("%b")
+        month_txs = [t for t in yearly_transactions if t.date.month == i]
+        income = sum(t.amount for t in month_txs if t.category and t.category.type == "INCOME")
+        expenses = sum(abs(t.amount) for t in month_txs if t.category and t.category.type == "EXPENSE")
+        monthly_stats.append({
+            "month": month_name,
+            "income": income,
+            "expenses": expenses
+        })
+
     return {
         "totalBalance": total_balance,
         "accountCount": len(accounts),
         "monthlyExpenses": monthly_expenses,
         "monthlyIncome": monthly_income,
         "totalBudget": total_budget,
-        "recentTransactions": recent_transactions
+        "recentTransactions": recent_transactions,
+        "monthlyStats": monthly_stats
     }

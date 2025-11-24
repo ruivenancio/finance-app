@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import api from "@/lib/api";
+import { categoriesDal } from "@/dal/categories";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,15 +25,26 @@ import {
 import { categorySchema, CategoryFormValues } from "@/lib/schemas";
 import { useEffect, useState } from "react";
 
-export function CategoryForm() {
+import { useToast } from "@/components/ui/use-toast";
+
+export function CategoryForm({
+    initialData,
+    onSuccess,
+    defaultType = "EXPENSE"
+}: {
+    initialData?: any,
+    onSuccess?: () => void,
+    defaultType?: "INCOME" | "EXPENSE"
+}) {
     const router = useRouter();
+    const { toast } = useToast();
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await api.get("/categories");
+                const response = await categoriesDal.getAll();
                 setCategories(response.data);
             } catch (error) {
                 console.error("Failed to fetch categories", error);
@@ -44,20 +55,48 @@ export function CategoryForm() {
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
-        defaultValues: {
+        defaultValues: initialData || {
             name: "",
-            type: "EXPENSE",
+            type: defaultType,
+            parentId: "none",
         },
     });
 
     async function onSubmit(data: CategoryFormValues) {
         setLoading(true);
         try {
-            await api.post("/categories", data);
-            router.push("/");
-            router.refresh();
+            const payload = { ...data };
+            if (payload.parentId === "none") {
+                payload.parentId = undefined;
+            }
+
+            if (initialData?.id) {
+                await categoriesDal.update(initialData.id, payload);
+                toast({
+                    title: "Category updated",
+                    description: "The category has been successfully updated.",
+                });
+            } else {
+                await categoriesDal.create(payload);
+                toast({
+                    title: "Category created",
+                    description: "The new category has been successfully created.",
+                });
+            }
+
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                router.push("/categories"); // Redirect to categories list
+                router.refresh();
+            }
         } catch (error) {
-            console.error("Failed to create category", error);
+            console.error("Failed to save category", error);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to save category. Please try again.",
+            });
         } finally {
             setLoading(false);
         }
@@ -65,7 +104,13 @@ export function CategoryForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form
+                onSubmit={(e) => {
+                    e.stopPropagation();
+                    form.handleSubmit(onSubmit)(e);
+                }}
+                className="space-y-8"
+            >
                 <FormField
                     control={form.control}
                     name="name"
@@ -106,7 +151,7 @@ export function CategoryForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Parent Category (Optional)</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value || "none"}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select parent category" />
@@ -114,7 +159,7 @@ export function CategoryForm() {
                                 </FormControl>
                                 <SelectContent>
                                     <SelectItem value="none">None</SelectItem>
-                                    {categories.map((cat) => (
+                                    {categories.filter(c => c.id !== initialData?.id).map((cat) => (
                                         <SelectItem key={cat.id} value={cat.id}>
                                             {cat.name}
                                         </SelectItem>
@@ -126,7 +171,7 @@ export function CategoryForm() {
                     )}
                 />
                 <Button type="submit" disabled={loading}>
-                    {loading ? "Creating..." : "Create Category"}
+                    {loading ? "Saving..." : (initialData ? "Update Category" : "Create Category")}
                 </Button>
             </form>
         </Form>

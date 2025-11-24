@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from ..database import prisma
-from ..models import CategoryCreate, CategoryResponse
+from ..models import CategoryCreate, CategoryResponse, CategoryUpdate
 from ..dependencies import get_current_user
 
 router = APIRouter(prefix="/categories", tags=["categories"])
@@ -29,3 +29,15 @@ async def delete_category(category_id: str, user=Depends(get_current_user)):
     
     await prisma.category.delete(where={"id": category_id})
     return {"message": "Category deleted"}
+
+@router.put("/{category_id}", response_model=CategoryResponse)
+async def update_category(category_id: str, category: CategoryUpdate, user=Depends(get_current_user)):
+    existing_category = await prisma.category.find_first(where={"id": category_id, "userId": user.id})
+    if not existing_category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    
+    update_data = category.dict(exclude_unset=True)
+    return await prisma.category.update(
+        where={"id": category_id},
+        data=update_data
+    )

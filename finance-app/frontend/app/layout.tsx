@@ -3,9 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import { UserProvider } from "@/hooks/use-user";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -36,14 +35,8 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <UserProvider>
-                        <SidebarProvider>
-                            <AppSidebar />
-                            <SidebarInset>
-                                <main className="w-full">
-                                    {children}
-                                </main>
-                            </SidebarInset>
-                        </SidebarProvider>
+                        {children}
+                        <Toaster />
                     </UserProvider>
                 </ThemeProvider>
             </body>

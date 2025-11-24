@@ -17,8 +17,9 @@ model User {
   categories    Category[]
   transactions  Transaction[]
   budgets       Budget[]
-  stocks        Stock[]
-  createdAt     DateTime  @default(now())
+  stocks            Stock[]
+  stockTransactions StockTransaction[]
+  createdAt         DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
 
@@ -30,6 +31,7 @@ model Account {
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   transactions Transaction[]
+  stocks       Stock[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -84,6 +86,24 @@ model Stock {
   currentPrice Float?
   userId       String
   user         User     @relation(fields: [userId], references: [id])
+  accountId    String
+  account      Account  @relation(fields: [accountId], references: [id])
+  transactions StockTransaction[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model StockTransaction {
+  id        String   @id @default(uuid())
+  type      String   // BUY, SELL, DIVIDEND
+  quantity  Float?   // Null for DIVIDEND
+  price     Float?   // Price per share, Null for DIVIDEND
+  amount    Float    // Total amount
+  date      DateTime
+  stockId   String
+  stock     Stock    @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

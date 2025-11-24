@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import connect_db, disconnect_db
-from .routers import auth, accounts, transactions, dashboard, categories
+from .routers import auth, accounts, transactions, dashboard, categories, stocks
 
 app = FastAPI(title="Personal Finance App")
 
@@ -31,6 +31,7 @@ app.include_router(accounts.router)
 app.include_router(categories.router)
 app.include_router(transactions.router)
 app.include_router(dashboard.router)
+app.include_router(stocks.router)
 
 @app.get("/")
 def read_root():

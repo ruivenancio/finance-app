@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import api from "@/lib/api";
+import { authDal } from "@/dal/auth";
 
 interface User {
     id: string;
@@ -23,7 +23,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
     const fetchUser = async () => {
         try {
-            const response = await api.get("/auth/me");
+            const response = await authDal.getMe();
             setUser(response.data);
         } catch (error) {
             console.error("Failed to fetch user", error);

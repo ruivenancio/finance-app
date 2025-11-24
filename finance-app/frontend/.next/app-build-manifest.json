@@ -1,55 +1,60 @@
 {
   "pages": {
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/login/page": [
+    "/(authenticated)/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/(authenticated)/page.js"
     ],
-    "/accounts/new/page": [
+    "/(authenticated)/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/accounts/new/page.js"
+      "static/chunks/app/(authenticated)/layout.js"
     ],
-    "/transactions/new/page": [
+    "/(authenticated)/stocks/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/transactions/new/page.js"
+      "static/chunks/app/(authenticated)/stocks/page.js"
     ],
-    "/accounts/page": [
+    "/(authenticated)/budget/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/accounts/page.js"
+      "static/chunks/app/(authenticated)/budget/page.js"
     ],
-    "/budget/page": [
+    "/(authenticated)/categories/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/budget/page.js"
+      "static/chunks/app/(authenticated)/categories/page.js"
     ],
-    "/transactions/page": [
+    "/(authenticated)/accounts/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/transactions/page.js"
+      "static/chunks/app/(authenticated)/accounts/page.js"
     ],
-    "/categories/new/page": [
+    "/(authenticated)/transactions/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/categories/new/page.js"
+      "static/chunks/app/(authenticated)/transactions/page.js"
     ],
-    "/not-found": [
+    "/(authenticated)/accounts/new/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
+      "static/chunks/app/(authenticated)/accounts/new/page.js"
+    ],
+    "/(authenticated)/transactions/new/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(authenticated)/transactions/new/page.js"
+    ],
+    "/(authenticated)/categories/new/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(authenticated)/categories/new/page.js"
     ]
   }
 }

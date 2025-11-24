@@ -83,8 +83,16 @@ const data = {
                     url: "/accounts",
                 },
                 {
+                    title: "Categories",
+                    url: "/categories",
+                },
+                {
                     title: "Budget",
                     url: "/budget",
+                },
+                {
+                    title: "Stocks",
+                    url: "/stocks",
                 },
             ],
         },

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import api from "@/lib/api";
+import { accountsDal } from "@/dal/accounts";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,15 +24,17 @@ import {
 } from "@/components/ui/select";
 import { accountSchema, AccountFormValues } from "@/lib/schemas";
 import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
-export function AccountForm() {
+export function AccountForm({ initialData, onSuccess }: { initialData?: any, onSuccess?: () => void }) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const form = useForm<AccountFormValues>({
         resolver: zodResolver(accountSchema),
-        defaultValues: {
+        defaultValues: initialData || {
             name: "",
+            type: "BANK",
             balance: 0,
         },
     });
@@ -40,11 +42,33 @@ export function AccountForm() {
     async function onSubmit(data: AccountFormValues) {
         setLoading(true);
         try {
-            await api.post("/accounts", data);
-            router.push("/");
-            router.refresh();
+            if (initialData) {
+                await accountsDal.update(initialData.id, data);
+                toast({
+                    title: "Account updated",
+                    description: "The account has been successfully updated.",
+                });
+            } else {
+                await accountsDal.create(data);
+                toast({
+                    title: "Account created",
+                    description: "The new account has been successfully created.",
+                });
+            }
+
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                router.push("/accounts");
+                router.refresh();
+            }
         } catch (error) {
-            console.error("Failed to create account", error);
+            console.error("Failed to save account", error);
+            toast({
+                title: "Error",
+                description: "Failed to save account. Please try again.",
+                variant: "destructive",
+            });
         } finally {
             setLoading(false);
         }
@@ -71,17 +95,17 @@ export function AccountForm() {
                     name="type"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Account Type</FormLabel>
+                            <FormLabel>Type</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select account type" />
+                                        <SelectValue placeholder="Select type" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                     <SelectItem value="BANK">Bank</SelectItem>
-                                    <SelectItem value="CARD">Credit Card</SelectItem>
-                                    <SelectItem value="STOCK">Investment</SelectItem>
+                                    <SelectItem value="CARD">Card</SelectItem>
+                                    <SelectItem value="STOCK">Stock</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -93,16 +117,21 @@ export function AccountForm() {
                     name="balance"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Initial Balance</FormLabel>
+                            <FormLabel>Current Balance</FormLabel>
                             <FormControl>
-                                <Input type="number" step="0.01" {...field} />
+                                <Input
+                                    type="number"
+                                    step="0.01"
+                                    {...field}
+                                    onChange={e => field.onChange(parseFloat(e.target.value))}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <Button type="submit" disabled={loading}>
-                    {loading ? "Creating..." : "Create Account"}
+                    {loading ? "Saving..." : (initialData ? "Update Account" : "Create Account")}
                 </Button>
             </form>
         </Form>

@@ -1,8 +1,7 @@
 {
-  "/not-found": "app/not-found.js",
-  "/page": "app/page.js",
-  "/transactions/new/page": "app/transactions/new/page.js",
-  "/transactions/page": "app/transactions/page.js",
-  "/categories/new/page": "app/categories/new/page.js",
-  "/login/page": "app/login/page.js"
+  "/(authenticated)/stocks/page": "app/(authenticated)/stocks/page.js",
+  "/(authenticated)/categories/new/page": "app/(authenticated)/categories/new/page.js",
+  "/(authenticated)/transactions/new/page": "app/(authenticated)/transactions/new/page.js",
+  "/(authenticated)/accounts/page": "app/(authenticated)/accounts/page.js",
+  "/(authenticated)/categories/page": "app/(authenticated)/categories/page.js"
 }
